@@ -1,6 +1,7 @@
 FROM python:3.7.3
 
-ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ARG http_proxy=http://10.15.1.10:8080
+ARG https_proxy=http://10.15.1.10:8080
 
 WORKDIR /app
 
