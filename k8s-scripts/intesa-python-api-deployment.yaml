@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: "intesa-lab-python-api"
-        image: "thingsolver/intesa-lab-python-api:1.0"
+        image: "repo/intesa-lab-python-api:1.0"
         imagePullPolicy: Always
         command: ["python"]
         args: ["/app/main.py"]
