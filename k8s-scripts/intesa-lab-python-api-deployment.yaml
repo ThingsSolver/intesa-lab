@@ -3,7 +3,7 @@ apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
   name: "intesa-lab-python-api"
-  namespace: "default"
+  namespace: "intesalab"
   labels:
     app: "intesa-lab-python-api"
 spec:
@@ -19,9 +19,7 @@ spec:
     spec:
       containers:
       - name: "intesa-lab-python-api"
-        image: "intesalab/intesa-lab-python-api:1.0"
+        image: "thingsolver/intesa-lab-python-api:1.0"
         imagePullPolicy: Always
         command: ["python"]
         args: ["/app/main.py"]
-      imagePullSecrets:
-      - name: regcred

@@ -1,31 +1,37 @@
+---
 apiVersion: "apps/v1"
-kind: Deployment
+kind: "Deployment"
 metadata:
-  name: hybrid-fastapi
-  namespace: "test"
+  name: "intesa-lab-wait-init"
+  namespace: "intesalab"
+  labels:
+    app: "intesa-lab-wait-init"
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: hybrid-fastapi-app
-  replicas: 1
+      app: "intesa-lab-wait-init"
   template:
     metadata:
       labels:
-        app: hybrid-fastapi-app
+        app: "intesa-lab-wait-init"
+        version: v1
     spec:
       containers:
-      - name: hybrid-fastapi-container
-        image: nginx
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 80
-        # env:
-        #   - name: USER_NAME # env variable
-        #     valueFrom:
-        #       secretKeyRef:
-        #         name: user-credentials
-        #         key: USER_NAME # secret literal during creation
+      - name: "intesa-lab-wait-init"
+        image: "thingsolver/intesa-lab-python-api:1.0"
+        imagePullPolicy: Always
+        command: ["python"]
+        args: ["/app/main.py"]
+        volumeMounts:
+        - name: config-map-cp
+          mountPath: /app/main.py
+          subPath: main.py
+      volumes:
+        - name: config-map-cp
+          configMap:
+            name: intesalab-main-cfg
       initContainers:
-      - name: hybrid-init-container
+      - name: init-container
         image: ibmcom/curl:4.0.0
         command: ['sh', '-c', "until nslookup my-nginx; do sleep 2; done"]
