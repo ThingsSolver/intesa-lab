@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: intesalab-main-cfg
+  namespace: intesalab
+data:
+  main.py: |-
+    from typing import Optional
+    import uvicorn
+    from fastapi import FastAPI
+    from pydantic import BaseModel
+    from fastapi.responses import HTMLResponse
+
+    app = FastAPI()
+
+    class Message(BaseModel):
+        sender: str
+        recipient: int
+
+    @app.get("/")
+    async def root():
+        return {"message": "Hello Banca Intesa"}
+
+    @app.post("/message")
+    def read_message(message: Message):
+        print(message)
+        result = message.json()
+        return result
+
+    @app.get("/itemsearch/{item_id}", response_class=HTMLResponse)
+    async def read_item(item_id: int, q: Optional[str] = None):
+        html_content = """
+        <html>
+            <head>
+                <title>Some HTML in here</title>
+                <style>
+                    body {
+                    background: Black; text-shadow: 2px 2px 4px Orange; font-family: Cambria; font-size: 30px;
+                    text-align: center; display: flex;
+                    width: 100vw; height: 100vh;
+                    }
+                    p { line-height: 100vh; }
+                </style>
+            </head>
+            <body style="display: block">
+                <p style="color: Orange;">{"item_id": """ + str(item_id) + """, "q": q}</p>
+            </body>
+        </html>
+        """
+        
+        return HTMLResponse(content=html_content, status_code=200)
+    if __name__ == "__main__":
+        uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info")

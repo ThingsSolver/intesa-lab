@@ -1,0 +1,33 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "intesa-lab-python-api-with-config-maps"
+  namespace: "intesalab"
+  labels:
+    app: "intesa-lab-python-api-with-config-maps"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "intesa-lab-python-api-with-config-maps"
+  template:
+    metadata:
+      labels:
+        app: "intesa-lab-python-api-with-config-maps"
+        version: v1
+    spec:
+      containers:
+      - name: "intesa-lab-python-api-with-config-maps"
+        image: "thingsolver/intesa-lab-python-api:1.0"
+        imagePullPolicy: Always
+        command: ["python"]
+        args: ["/app/main.py"]
+        volumeMounts:
+        - name: config-map-cp
+          mountPath: /app/main.py
+          subPath: main.py
+      volumes:
+        - name: config-map-cp
+          configMap:
+            name: intesalab-main-cfg

@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: intesa-lab-curl-job
+  namespace: "intesalab"
+spec:
+  template:
+    spec:
+      containers:
+      - name: health-check
+        image: ibmcom/curl:4.0.0
+        command: ["/bin/bash", "-c"]
+        args: 
+          - "curl http://intesa-lab-python-api-with-config-maps.intesalab:8080/"
+      restartPolicy: OnFailure

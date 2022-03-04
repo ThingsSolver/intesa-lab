@@ -1,0 +1,31 @@
+apiVersion: "apps/v1"
+kind: Deployment
+metadata:
+  name: hybrid-fastapi
+  namespace: "test"
+spec:
+  selector:
+    matchLabels:
+      app: hybrid-fastapi-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hybrid-fastapi-app
+    spec:
+      containers:
+      - name: hybrid-fastapi-container
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        # env:
+        #   - name: USER_NAME # env variable
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: user-credentials
+        #         key: USER_NAME # secret literal during creation
+      initContainers:
+      - name: hybrid-init-container
+        image: ibmcom/curl:4.0.0
+        command: ['sh', '-c', "until nslookup my-nginx; do sleep 2; done"]
