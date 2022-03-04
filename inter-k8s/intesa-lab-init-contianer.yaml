@@ -33,5 +33,5 @@ spec:
             name: intesalab-main-cfg
       initContainers:
       - name: init-container
-        image: ibmcom/curl:4.0.0
+        image: mkrishnamurthy/nslookup
         command: ['sh', '-c', "until nslookup my-nginx; do sleep 2; done"]
